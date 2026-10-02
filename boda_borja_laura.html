@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Borja & Laura · 1 de mayo de 2027</title>
+<style>
+:root{--bg:#f7f2ea;--ink:#33443a;--muted:#718075;--accent:#9a8061;--card:#fffdf9;--line:#ddd3c5}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Georgia,'Times New Roman',serif}main{max-width:720px;margin:auto}.hero{min-height:620px;display:flex;align-items:center;justify-content:center;text-align:center;padding:50px 25px;background:radial-gradient(circle at top,#fffdf9 0,#f7f2ea 62%)}.eyebrow{letter-spacing:4px;font:12px Arial,sans-serif;text-transform:uppercase;color:var(--muted)}h1{font-size:64px;font-weight:400;margin:25px 0 8px}h2{font-size:34px;font-weight:400;margin:8px 0 18px}.amp{font-style:italic;color:var(--accent)}.date{font:14px Arial,sans-serif;letter-spacing:3px;margin:22px 0 34px}.intro{font-size:19px;line-height:1.7;max-width:520px;margin:auto;color:#526158}.btn{display:inline-block;margin-top:28px;background:var(--ink);color:white;text-decoration:none;border-radius:30px;padding:15px 28px;font:12px Arial,sans-serif;letter-spacing:2px;text-transform:uppercase}.section{padding:65px 24px}.center{text-align:center}.kicker{font:11px Arial,sans-serif;letter-spacing:3px;text-transform:uppercase;color:var(--accent)}.details{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:30px}.card{background:var(--card);border:1px solid var(--line);padding:28px 20px;text-align:center}.card h3{font-size:22px;font-weight:400;margin:10px 0}.card p{font:14px Arial,sans-serif;line-height:1.6;color:var(--muted)}.map{display:block;margin-top:18px;color:var(--ink);font:12px Arial,sans-serif;letter-spacing:1px}.formbox{background:var(--card);border:1px solid var(--line);padding:32px 25px;margin-top:30px}label{display:block;font:12px Arial,sans-serif;letter-spacing:.5px;margin:19px 0 7px;color:#536158}input,textarea,select{width:100%;padding:13px;border:1px solid #cfc5b7;border-radius:7px;background:#fff;font:15px Arial,sans-serif;color:#333}textarea{min-height:85px}.choices{display:flex;gap:12px;flex-wrap:wrap}.choice{border:1px solid var(--line);padding:12px 15px;border-radius:8px;font:14px Arial,sans-serif;background:white}.choice input{width:auto;margin-right:6px}.submit{width:100%;border:0;margin-top:25px;cursor:pointer}.note{font:11px Arial,sans-serif;color:var(--muted);line-height:1.5;margin-top:14px}.footer{text-align:center;padding:45px 20px 70px;color:var(--muted);font-size:18px}.hidden{display:none}.success{background:#edf3ee;padding:18px;border-radius:8px;margin-top:18px;font:14px Arial,sans-serif;color:#405648}@media(max-width:560px){h1{font-size:50px}.details{grid-template-columns:1fr}.hero{min-height:570px}}
+</style></head>
+<body><main>
+<section class="hero"><div><div class="eyebrow">Nos casamos</div><h1>Borja <span class="amp">&</span> Laura</h1><div class="date">01 · 05 · 2027</div><p class="intro">Hay días que merecen ser celebrados rodeados de las personas que queremos. Y queremos compartir este día contigo.</p><a class="btn" href="#confirmar">Confirmar asistencia</a></div></section>
+<section class="section center"><div class="kicker">El gran día</div><h2>Ceremonia & celebración</h2><div class="details">
+<div class="card"><div class="kicker">12:30 · aprox.</div><h3>Iglesia de San Jorge</h3><p>Las Fraguas · Arenas de Iguña<br>Cantabria</p><a class="map" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Iglesia%20de%20San%20Jorge%2C%20Las%20Fraguas%2C%20Arenas%20de%20Igu%C3%B1a">Abrir en Google Maps →</a></div>
+<div class="card"><div class="kicker">Después de la ceremonia</div><h3>Casón de la Marquesa</h3><p>Las Fraguas s/n<br>39450 Arenas de Iguña · Cantabria</p><a class="map" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Cas%C3%B3n%20de%20la%20Marquesa%2C%20Las%20Fraguas%2C%20Cantabria">Abrir en Google Maps →</a></div>
+</div></section>
+<section id="confirmar" class="section"><div class="center"><div class="kicker">Necesitamos saber</div><h2>¿Nos acompañas?</h2><p class="intro">Rellena este pequeño formulario para que podamos organizarlo todo. 💚</p></div>
+<div class="formbox"><form id="rsvp"><label>Nombre y apellidos *</label><input required name="nombre" placeholder="Tu nombre completo">
+<label>¿Vas a acompañarnos? *</label><div class="choices"><label class="choice"><input type="radio" name="asistencia" value="Sí, allí estaré" required> Sí, allí estaré</label><label class="choice"><input type="radio" name="asistencia" value="No podré asistir"> No podré asistir</label></div>
+<div id="acompanante"><label>¿Vienes con acompañante? *</label><div class="choices"><label class="choice"><input type="radio" name="acompanante" value="Sí"> Sí</label><label class="choice"><input type="radio" name="acompanante" value="No"> No</label></div><label>Nombre y apellidos del acompañante</label><input name="nombre_acompanante" placeholder="Si vienes acompañado/a"></div>
+<label>¿Tienes alguna alergia o intolerancia alimentaria?</label><textarea name="intolerancias" placeholder="Indícanos cuál o escribe “ninguna”"></textarea>
+<label>¿Quieres contarnos algo más?</label><textarea name="comentarios" placeholder="Cualquier detalle que debamos saber…"></textarea>
+<button class="btn submit" type="submit">Enviar confirmación</button><div id="success" class="success hidden">¡Gracias! Hemos recibido tu respuesta. ❤️</div><p class="note">Tus datos se utilizarán únicamente para organizar nuestra boda.</p></form></div></section>
+<section class="footer">Con muchísimas ganas de celebrar este día contigo<br><br><strong>Borja & Laura</strong></section>
+</main><script>
+const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0EqpjzCUjLWKnrlQ4883MzcGqECc1OgWjpJXIr8P-ulQtBQmDpr2lmrGFnxXPydPR3Q/exec";
+const f = document.querySelector('#rsvp');
+const success = document.querySelector('#success');
+const submitButton = f.querySelector('.submit');
+
+f.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  submitButton.disabled = true;
+  submitButton.textContent = "Enviando…";
+
+  const formData = new FormData(f);
+  const data = Object.fromEntries(formData.entries());
+
+  try {
+    await fetch(GOOGLE_APPS_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(data)
+    });
+
+    f.reset();
+    success.classList.remove('hidden');
+    success.textContent = "¡Gracias! Hemos recibido tu respuesta. ❤️";
+    submitButton.textContent = "Respuesta enviada";
+  } catch (error) {
+    console.error(error);
+    submitButton.disabled = false;
+    submitButton.textContent = "Enviar confirmación";
+    alert("No se ha podido enviar la respuesta. Inténtalo de nuevo.");
+  }
+});
+</script></body></html>
