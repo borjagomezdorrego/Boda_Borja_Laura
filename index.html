@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="es">
 <head>
@@ -255,7 +256,7 @@ Confirmar asistencia
 
 <div class="card">
 
-<div class="kicker">12:30 · aprox.</div>
+<div class="kicker">13:00 · aprox.</div>
 
 <h3>Iglesia de San Jorge</h3>
 
@@ -420,29 +421,23 @@ No
 
 <div id="detalle-intolerancia" class="hidden">
 
-<label>
-¿Quién tiene la alergia o intolerancia?
-</label>
+<label>¿Quién tiene la alergia o intolerancia? (puedes marcar a los dos)</label>
 
-<select
-name="persona_intolerancia"
-id="persona_intolerancia">
+<div class="choice" style="margin-top:12px">
+<label style="margin:0"><input type="checkbox" id="marca_principal" style="width:auto;margin-right:8px"><span id="etiqueta_principal">Invitado principal</span></label>
+<div id="detalle_principal" class="hidden">
+<label for="alergia_principal">Alergias o intolerancias de esta persona *</label>
+<textarea name="alergia_principal" id="alergia_principal" placeholder="Ej.: gluten, frutos secos…"></textarea>
+</div>
+</div>
 
-<option value="">
-Selecciona una persona
-</option>
-
-</select>
-
-
-<label>
-Indica la alergia o intolerancia
-</label>
-
-<textarea
-name="intolerancias"
-id="intolerancias"
-placeholder="Ej.: lactosa, gluten, frutos secos…"></textarea>
+<div class="choice hidden" id="bloque_acompanante" style="margin-top:12px">
+<label style="margin:0"><input type="checkbox" id="marca_acompanante" style="width:auto;margin-right:8px"><span id="etiqueta_acompanante">Acompañante</span></label>
+<div id="detalle_acompanante" class="hidden">
+<label for="alergia_acompanante">Alergias o intolerancias de esta persona *</label>
+<textarea name="alergia_acompanante" id="alergia_acompanante" placeholder="Ej.: lactosa…"></textarea>
+</div>
+</div>
 
 </div>
 
@@ -499,307 +494,94 @@ Borja & Laura
 
 
 <script>
+const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0EqpjzCUjLWKnrlQ4883MzcGqECc1OgWjpJXIr8P-ulQtBQmDpr2lmrGFnxXPydPR3Q/exec";
+const f = document.querySelector('#rsvp');
+const nombre = f.querySelector('[name="nombre"]');
+const nombreAcompanante = f.querySelector('[name="nombre_acompanante"]');
+const acompBox = document.querySelector('#acompanante');
+const detalle = document.querySelector('#detalle-intolerancia');
+const bloqueAcompanante = document.querySelector('#bloque_acompanante');
+const marcaPrincipal = document.querySelector('#marca_principal');
+const marcaAcompanante = document.querySelector('#marca_acompanante');
+const alergiaPrincipal = document.querySelector('#alergia_principal');
+const alergiaAcompanante = document.querySelector('#alergia_acompanante');
+const boton = f.querySelector('.submit');
+const success = document.querySelector('#success');
 
-const GOOGLE_APPS_SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbz0EqpjzCUjLWKnrlQ4883MzcGqECc1OgWjpJXIr8P-ulQtBQmDpr2lmrGFnxXPydPR3Q/exec";
-
-
-const f =
-document.querySelector('#rsvp');
-
-const success =
-document.querySelector('#success');
-
-const submitButton =
-f.querySelector('.submit');
-
-const nombre =
-f.querySelector('[name="nombre"]');
-
-const nombreAcompanante =
-f.querySelector('[name="nombre_acompanante"]');
-
-const persona =
-document.querySelector('#persona_intolerancia');
-
-const detalle =
-document.querySelector('#detalle-intolerancia');
-
-const acompBox =
-document.querySelector('#acompanante');
-
-
-function actualizarPersonas(){
-
-const actual =
-persona.value;
-
-const arr = [];
-
-const n1 =
-nombre.value.trim();
-
-const conAcomp =
-f.querySelector('[name="acompanante"]:checked')?.value === "Sí";
-
-const n2 =
-nombreAcompanante.value.trim();
-
-
-if(n1){
-arr.push(n1);
+function valorRadio(campo) {
+  return f.querySelector('[name="' + campo + '"]:checked')?.value || '';
+}
+function actualizarFormulario() {
+  const asiste = valorRadio('asistencia') === 'Sí, allí estaré';
+  const acompanado = asiste && valorRadio('acompanante') === 'Sí';
+  const hayAlergia = valorRadio('tiene_intolerancia') === 'Sí';
+  acompBox.classList.toggle('hidden', !asiste);
+  detalle.classList.toggle('hidden', !hayAlergia);
+  document.querySelector('#etiqueta_principal').textContent = nombre.value.trim() || 'Invitado principal';
+  document.querySelector('#etiqueta_acompanante').textContent = nombreAcompanante.value.trim() || 'Acompañante';
+  bloqueAcompanante.classList.toggle('hidden', !acompanado);
+  if (!acompanado) {
+    marcaAcompanante.checked = false;
+    alergiaAcompanante.value = '';
+  }
+  if (!hayAlergia) {
+    marcaPrincipal.checked = false;
+    marcaAcompanante.checked = false;
+    alergiaPrincipal.value = '';
+    alergiaAcompanante.value = '';
+  }
+  document.querySelector('#detalle_principal').classList.toggle('hidden', !marcaPrincipal.checked || !hayAlergia);
+  document.querySelector('#detalle_acompanante').classList.toggle('hidden', !marcaAcompanante.checked || !hayAlergia || !acompanado);
+  alergiaPrincipal.required = hayAlergia && marcaPrincipal.checked;
+  alergiaAcompanante.required = hayAlergia && acompanado && marcaAcompanante.checked;
+  nombreAcompanante.required = acompanado;
+  f.querySelectorAll('[name="acompanante"]').forEach(r => r.required = asiste);
+  f.querySelectorAll('[name="tiene_intolerancia"]').forEach(r => r.required = asiste);
 }
 
-if(conAcomp && n2){
-arr.push(n2);
-}
+f.querySelectorAll('input[type="radio"]').forEach(r => r.addEventListener('change', actualizarFormulario));
+[nombre, nombreAcompanante].forEach(x => x.addEventListener('input', actualizarFormulario));
+[marcaPrincipal, marcaAcompanante].forEach(x => x.addEventListener('change', actualizarFormulario));
 
-
-persona.innerHTML =
-'<option value="">Selecciona una persona</option>';
-
-
-arr.forEach(p => {
-
-const o =
-document.createElement('option');
-
-o.value = p;
-o.textContent = p;
-
-persona.appendChild(o);
-
+f.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const asiste = valorRadio('asistencia') === 'Sí, allí estaré';
+  const hayAlergia = asiste && valorRadio('tiene_intolerancia') === 'Sí';
+  if (hayAlergia && !marcaPrincipal.checked && !marcaAcompanante.checked) {
+    alert('Selecciona al menos una persona con alergia o intolerancia.');
+    return;
+  }
+  if (!f.reportValidity()) return;
+  const data = Object.fromEntries(new FormData(f).entries());
+  data.tiene_intolerancia = hayAlergia ? 'Sí' : (asiste ? 'No' : 'No procede');
+  data.alergia_principal = hayAlergia && marcaPrincipal.checked ? alergiaPrincipal.value.trim() : '';
+  data.alergia_acompanante = hayAlergia && marcaAcompanante.checked ? alergiaAcompanante.value.trim() : '';
+  if (!asiste) {
+    data.acompanante = 'No procede';
+    data.nombre_acompanante = '';
+  }
+  boton.disabled = true;
+  boton.textContent = 'Enviando…';
+  try {
+    await fetch(GOOGLE_APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {'Content-Type': 'text/plain;charset=utf-8'},
+      body: JSON.stringify(data)
+    });
+    f.reset();
+    actualizarFormulario();
+    success.classList.remove('hidden');
+    success.textContent = '¡Gracias! Tu respuesta se ha enviado. ❤️';
+    boton.textContent = 'Respuesta enviada';
+  } catch (error) {
+    console.error(error);
+    alert('No se ha podido enviar. Inténtalo de nuevo.');
+    boton.disabled = false;
+    boton.textContent = 'Enviar confirmación';
+  }
 });
-
-
-if(arr.includes(actual)){
-persona.value = actual;
-}
-
-}
-
-
-nombre.addEventListener(
-'input',
-actualizarPersonas
-);
-
-
-nombreAcompanante.addEventListener(
-'input',
-actualizarPersonas
-);
-
-
-f.querySelectorAll(
-'[name="acompanante"]'
-).forEach(r => {
-
-r.addEventListener(
-'change',
-() => {
-
-if(
-r.checked &&
-r.value === "No"
-){
-
-nombreAcompanante.value = "";
-
-}
-
-actualizarPersonas();
-
-});
-
-});
-
-
-f.querySelectorAll(
-'[name="tiene_intolerancia"]'
-).forEach(r => {
-
-r.addEventListener(
-'change',
-() => {
-
-const si =
-f.querySelector(
-'[name="tiene_intolerancia"]:checked'
-)?.value === "Sí";
-
-
-detalle.classList.toggle(
-'hidden',
-!si
-);
-
-
-persona.required = si;
-
-document.querySelector(
-'#intolerancias'
-).required = si;
-
-
-if(!si){
-
-persona.value = "";
-
-document.querySelector(
-'#intolerancias'
-).value = "";
-
-}
-
-actualizarPersonas();
-
-});
-
-});
-
-
-f.querySelectorAll(
-'[name="asistencia"]'
-).forEach(r => {
-
-r.addEventListener(
-'change',
-() => {
-
-const va =
-f.querySelector(
-'[name="asistencia"]:checked'
-)?.value === "Sí, allí estaré";
-
-
-acompBox.classList.toggle(
-'hidden',
-!va
-);
-
-
-if(!va){
-
-f.querySelectorAll(
-'[name="acompanante"]'
-).forEach(
-x => x.checked = false
-);
-
-nombreAcompanante.value = "";
-
-actualizarPersonas();
-
-}
-
-});
-
-});
-
-
-f.addEventListener(
-'submit',
-async e => {
-
-e.preventDefault();
-
-
-const ti =
-f.querySelector(
-'[name="tiene_intolerancia"]:checked'
-)?.value || "";
-
-
-if(
-ti === "Sí" &&
-!persona.value
-){
-
-alert(
-"Selecciona quién tiene la alergia o intolerancia."
-);
-
-return;
-
-}
-
-
-submitButton.disabled = true;
-
-submitButton.textContent =
-"Enviando…";
-
-
-const data =
-Object.fromEntries(
-new FormData(f).entries()
-);
-
-
-try{
-
-await fetch(
-GOOGLE_APPS_SCRIPT_URL,
-{
-
-method:"POST",
-
-mode:"no-cors",
-
-headers:{
-"Content-Type":
-"text/plain;charset=utf-8"
-},
-
-body:
-JSON.stringify(data)
-
-});
-
-
-f.reset();
-
-acompBox.classList.remove(
-'hidden'
-);
-
-detalle.classList.add(
-'hidden'
-);
-
-actualizarPersonas();
-
-
-success.classList.remove(
-'hidden'
-);
-
-success.textContent =
-"¡Gracias! Hemos recibido tu respuesta. ❤️";
-
-
-submitButton.textContent =
-"Respuesta enviada";
-
-
-}catch(error){
-
-console.error(error);
-
-submitButton.disabled = false;
-
-submitButton.textContent =
-"Enviar confirmación";
-
-alert(
-"No se ha podido enviar la respuesta. Inténtalo de nuevo."
-);
-
-}
-
-});
-
+actualizarFormulario();
 </script>
 
 </body>
